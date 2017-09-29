@@ -1,47 +1,123 @@
 // Store time
-var minutes = 25;
+var workMinutes = 1;
+var breakMinutes = 5;
+var minutes = workMinutes;
 var seconds = 0;
-var displayedTime = minutes + ':' + seconds;
-var sessionType = 'Work'; // session or break
+var displayedTime = null;
+var sessionType = 'Work'; // work or break
 
-// Display time
-console.log(displayedTime);
+function changeDisplayedTime(){
+  if(seconds.toString().length === 1){
+    displayedTime = minutes + ':0' + seconds; // Add 0 in front of single digit seconds
+  } else {
+    displayedTime = minutes + ':' + seconds;
+  }
+}
+
+function displayTime(){
+  var timerContainer = document.getElementById('timerContainer');
+  changeDisplayedTime();
+  timerContainer.innerHTML = sessionType + ': ' + displayedTime;
+}
+
+function changeBreakMinutesDisplayed(){
+  breakMinutesContainer.innerHTML = 'Break minutes: ' + breakMinutes;
+}
+
+function changeWorkMinutesDisplayed(){
+  workMinutesContainer.innerHTML = 'Work minutes: ' + workMinutes;
+}
+
+// Show work and break minutes
+var workMinutesContainer = document.getElementById('workMinutesContainer');
+var breakMinutesContainer = document.getElementById('breakMinutesContainer');
+workMinutesContainer.innerHTML = 'Work minutes: ' + workMinutes;
+breakMinutesContainer.innerHTML = 'Break minutes: ' + breakMinutes;
+
+// Run initial page
+displayTime();
 
 // Count down timer
 function countDown(){
-  if(seconds === 0){
+  // Switch between work and break when session ends
+  if(displayedTime === '0:00'){
+    clearInterval(runningTimer);
+    if(sessionType === 'Work'){
+      sessionType = 'Break';
+      minutes = breakMinutes;
+      seconds = 0;
+    } else {
+      sessionType = 'Work';
+      minutes = workMinutes;
+      seconds = 0;
+    }
+    runningTimer = setInterval(countDown, 1000);
+    // Count down every second
+  } else if(seconds === 0){ // Count down every second
     seconds = 59;
     minutes -= 1;
   } else {
     seconds -=1;
   }
-  displayedTime = minutes + ':' + seconds;
+
+  //changeDisplayedTime();
+  displayTime();
 }
 
 // Continuous countdown timer
-var runningTimer = setInterval(countDown, 1000);
+var runningTimer = null;
+var startButton = document.getElementById('startButton');
+startButton.addEventListener('click', function(){
+  runningTimer = setInterval(countDown, 1000);
+});
 
-// Stop clock when paused
-clearInterval(runningTimer);
-
-// Stop clock when time reaches 0
-if(minutes === 0 && seconds === 0){
+function resetTimer(){
   clearInterval(runningTimer);
-}
-
-// Switch between session and break when timer reaches 0
-if(sessionType === 'Work'){
-  sessionType = 'Break';
-  minutes = numOfBreakMinutes;
-} else {
+  minutes = workMinutes;
+  seconds = 0;
   sessionType = 'Work';
-  minutes = numOfWorkMinutes;
+  changeDisplayedTime();
+  displayTime();
 }
 
-// Increase session or break length
-minutes +=1;
+// Stop clock when reset
+var resetButton = document.getElementById('resetButton');
+resetButton.addEventListener('click', function(){
+  resetTimer();
+});
 
-// Decrease session or break length
-if(minutes!==1){ // Prevent user from making session or length 0
-  minutes -= 1;
-}
+var addBreakMinutesButton = document.getElementById('addBreakMinutesButton');
+addBreakMinutesButton.addEventListener('click', function(){
+  breakMinutes++;
+  changeBreakMinutesDisplayed();
+  displayTime();
+});
+
+var subtractBreakMinutesButton = document.getElementById('subtractBreakMinutesButton');
+subtractBreakMinutesButton.addEventListener('click', function(){
+  if(breakMinutes !== 1){
+    breakMinutes--;
+    changeBreakMinutesDisplayed();
+    displayTime();
+  }
+});
+
+var addWorkMinutesButton = document.getElementById('addWorkMinutesButton');
+addWorkMinutesButton.addEventListener('click', function(){
+  resetTimer();
+  workMinutes++;
+  minutes = workMinutes;
+  changeWorkMinutesDisplayed();
+  displayTime();
+});
+
+var subtractWorkMinutesButton = document.getElementById('subtractWorkMinutesButton');
+subtractWorkMinutesButton.addEventListener('click', function(){
+  if(workMinutes !== 1){
+    resetTimer();
+    workMinutes--;
+    minutes = workMinutes;
+    changeWorkMinutesDisplayed();
+    displayTime();
+  }
+});
