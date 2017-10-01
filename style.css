@@ -1,0 +1,50 @@
+body {
+  font-family: 'VT323', monospace;
+  margin-top: 7em;
+  text-align: center;
+}
+
+button {
+  border: none;
+  background: none;
+  outline-color: white;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+button:active {
+  color: gray;
+}
+
+#breakContainer, #breakContainer button, #breakContainer div,
+#workContainer, #workContainer button, #workContainer div {
+  display: inline-block;
+}
+
+#timerAndButtonsContainer {
+  font-size: 3em;
+  margin-bottom: 1em;
+}
+
+#timerAndButtonsContainer span {
+  font-size: 3em;
+}
+
+#timerAndButtonsContainer button {
+  font-family: 'VT323', monospace;
+  font-size: 0.35em;
+}
+
+#workContainer, #breakContainer {
+  font-size: 2em;
+}
+
+#workContainer span, #breakContainer span {
+  font-size: 0.5em;
+}
+
+#breakContainer {
+  margin-left: 2em;
+}
